@@ -11,7 +11,9 @@ func setupRouter() *gin.Engine {
 	r.GET("/healthy", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"success": true})
 	})
-	
+
+	CategoryRoutes(r)
+
 	return r
 }
 
