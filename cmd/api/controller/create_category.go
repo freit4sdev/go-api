@@ -2,6 +2,8 @@ package controller
 
 import (
 	"net/http"
+
+	"github.com/freit4sdev/go-api/internal/repository"
 	"github.com/freit4sdev/go-api/internal/use_case"
 	"github.com/gin-gonic/gin"
 )
@@ -10,7 +12,7 @@ type createCategoryInput struct {
 	Name string `json:"name" binding:"required"`
 }
 
-func CreateCategory(c *gin.Context) {
+func CreateCategory(c *gin.Context, categoryRepo repository.ICategoryRepository) {
 	var body createCategoryInput
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest,
@@ -20,7 +22,7 @@ func CreateCategory(c *gin.Context) {
 			})
 		return
 	}
-	useCase := use_case.NewCreateCategoryUseCase()
+	useCase := use_case.NewCreateCategoryUseCase(categoryRepo)
 	err := useCase.Execute(body.Name)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError,

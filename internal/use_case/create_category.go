@@ -1,16 +1,16 @@
 package use_case
 
 import (
-	"log"
-
 	"github.com/freit4sdev/go-api/internal/entity"
+	"github.com/freit4sdev/go-api/internal/repository"
 )
 
 type createCategoryUseCase struct {
+	repo repository.ICategoryRepository
 }
 
-func NewCreateCategoryUseCase() *createCategoryUseCase {
-	return &createCategoryUseCase{}
+func NewCreateCategoryUseCase(repo repository.ICategoryRepository) *createCategoryUseCase {
+	return &createCategoryUseCase{repo: repo}
 }
 
 func (c *createCategoryUseCase) Execute(name string) error {
@@ -18,7 +18,11 @@ func (c *createCategoryUseCase) Execute(name string) error {
 	if err != nil {
 		return err
 	}
-	
-	log.Println(category)
+
+	err = c.repo.Save(category)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
